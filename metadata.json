@@ -1,0 +1,7 @@
+{
+  "name": "WastraNusa: Virtual Try-On Pakaian Adat Indonesia",
+  "description": "An educational and interactive web application to introduce Indonesian traditional clothing (Pakaian Adat Nusantara) through Virtual Try-On (VTO) technology powered by Generative AI.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
