@@ -1,5 +1,5 @@
 import React from 'react';
-import Logo from '@/assets/logo/wastranusa-logo.png';
+import Logo from '@/public/assets/logo/wastranusa-logo.png';
 
 interface HeaderProps {
   onNavigate: (view: 'map' | 'studio') => void;

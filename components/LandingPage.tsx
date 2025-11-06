@@ -1,5 +1,10 @@
 import React from 'react';
 import { Header } from './Header';
+import Arel from '@/public/founders-photo/arel.png';
+import Faruq from '@/public/founders-photo/faruq.png';
+import Kunk from '@/public/founders-photo/kunk.png';
+import Mbak from '@/public/founders-photo/mbak.png';
+import Reciii from '@/public/founders-photo/reciii.png';
 
 interface LandingPageProps {
   onStart: () => void;
@@ -213,11 +218,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
                     <span className="font-semibold text-amber-800 uppercase tracking-widest">Tim Kami</span>
                     <h2 className="font-display text-4xl md:text-5xl font-bold text-stone-900 mb-16">Di Balik WastraNusa</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10">
-                        <TeamMemberCard name="Reqi Jumantara Hapid" role="Project Manager" imageUrl="https://i.pravatar.cc/150?u=reqi" />
-                        <TeamMemberCard name="Wardah Aulia Azzahra" role="Data & Culture Researcher" imageUrl="https://i.pravatar.cc/150?u=wardah" />
-                        <TeamMemberCard name="Umar Faruq Robbany" role="Lead Developer" imageUrl="https://i.pravatar.cc/150?u=umar" />
-                        <TeamMemberCard name="Farrel Zandra" role="AI Engineer" imageUrl="https://i.pravatar.cc/150?u=farrel" />
-                        <TeamMemberCard name="Banteng Harisantoso" role="UI/UX Designer" imageUrl="https://i.pravatar.cc/150?u=banteng" />
+                        <TeamMemberCard name="Reqi Jumantara Hapid" role="Project Manager" imageUrl={Reciii} />
+                        <TeamMemberCard name="Wardah Aulia Azzahra" role="Data & Culture Researcher" imageUrl={Mbak} />
+                        <TeamMemberCard name="Umar Faruq Robbany" role="Lead Developer" imageUrl={Faruq} />
+                        <TeamMemberCard name="Farrel Zandra" role="AI Engineer" imageUrl={Arel} />
+                        <TeamMemberCard name="Banteng Harisantoso" role="UI/UX Designer" imageUrl={Kunk} />
                     </div>
                 </div>
             </section>
