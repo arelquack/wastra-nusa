@@ -75,7 +75,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
     if (el) el.playbackRate = 0.9;
   }}
   className="absolute inset-0 w-full h-full object-cover z-0"
-  src="/video-cover.mp4"
+  src="/video-cover.webm"
   autoPlay
   loop
   muted
