@@ -1,5 +1,3 @@
-// jumantarareqi20/vto-wastra-adat-nusantara/vto-wastra-adat-nusantara-20baf3ed709083f9b408eb83c41429366d61c2b8/components/TryOnStudio.tsx
-
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { generateVirtualTryOn } from '../services/geminiService';
 import { fileToBase64 } from '../utils/fileUtils';

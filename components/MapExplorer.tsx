@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { clothingItems } from '../constants';
 import type { ClothingItem } from '../types';
+import { Footer } from './Footer';
 
 interface MapExplorerProps {
   onSelectTribe: (item: ClothingItem) => void;
