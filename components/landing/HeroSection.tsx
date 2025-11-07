@@ -1,6 +1,6 @@
 // components/landing/HeroSection.tsx
 import React from 'react';
-import { IconArrowRight } from '../icons';
+import { IconArrowRight } from '../Icons';
 
 export const HeroSection: React.FC<{ onStart: () => void }> = ({ onStart }) => (
   <section className="relative min-h-screen flex items-center justify-center text-center overflow-hidden pt-16">

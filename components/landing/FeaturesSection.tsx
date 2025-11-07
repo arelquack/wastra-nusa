@@ -1,7 +1,7 @@
 // components/landing/FeaturesSection.tsx
 import React from 'react';
 import { FeatureCard } from '../FeatureCard';
-import { IconAi, IconMap, IconCamera, IconWorld } from '../icons';
+import { IconAi, IconMap, IconCamera, IconWorld } from '../Icons';
 
 export const FeaturesSection = () => (
   <section id="features" className="py-24 px-4 bg-white">
