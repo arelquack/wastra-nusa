@@ -3,18 +3,10 @@
 import { GoogleGenAI, Modality } from "@google/genai";
 import type { ClothingItem } from "../types";
 
-// Ambil API key dari environment
 const API_KEY = process.env.API_KEY;
 
-// !!! DIHAPUS !!!
-// Pengecekan dan inisialisasi AI dihapus dari top-level
-// Ini mencegah aplikasi crash saat load jika API_KEY belum ada.
-/*
-if (!API_KEY) {
-  throw new Error("API_KEY environment variable not set");
-}
-const ai = new GoogleGenAI({ apiKey: API_KEY });
-*/
+// Pindahkan cek API_KEY ke dalam fungsi yang menggunakannya
+// const ai = new GoogleGenAI({ apiKey: API_KEY }); // Jangan inisialisasi di sini
 
 const fileToGenerativePart = (base64Data: string, mimeType: string) => {
   return {
@@ -29,27 +21,27 @@ export const generateVirtualTryOn = async (
   personImage: { data: string; mimeType: string },
   clothingItem: ClothingItem
 ): Promise<string> => {
-
-  // === PERBAIKAN KEAMANAN ===
-  // Pindahkan pengecekan API Key dan inisialisasi AI ke dalam fungsi.
-  // Ini hanya akan berjalan saat tombol "Generate" ditekan.
+  
+  // === PINDAHKAN CEK KE SINI ===
   if (!API_KEY) {
     console.error("API_KEY environment variable not set");
-    // Lempar error di sini agar bisa ditangkap oleh try...catch di TryOnStudio.tsx
     throw new Error("Koneksi ke AI gagal: API Key tidak ditemukan.");
   }
-
-  // Inisialisasi AI di sini, hanya saat akan digunakan.
+  // Inisialisasi AI di sini, hanya saat dibutuhkan
   const ai = new GoogleGenAI({ apiKey: API_KEY });
-  // ==========================
+  // ===============================
 
   try {
     const model = 'gemini-2.5-flash-image';
     
-    // Fetch clothing image and convert to base64.
-    // Using a CORS proxy to prevent cross-origin issues in the browser.
-    const proxyUrl = 'https://api.allorigins.win/raw?url=';
-    const response = await fetch(proxyUrl + encodeURIComponent(clothingItem.imageUrl));
+    // === FIX NETWORK ERROR ADA DI SINI ===
+    // HAPUS PROXY. Kita fetch langsung ke aset kita sendiri.
+    // Browser bisa fetch dari origin (domain) yang sama tanpa masalah CORS.
+    // const proxyUrl = 'https://api.allorigins.win/raw?url='; // <--- HAPUS INI
+    
+    // Ganti baris fetch lama dengan ini:
+    const response = await fetch(clothingItem.imageUrl);
+    // ===================================
 
     if (!response.ok) {
         throw new Error(`Gagal mengambil gambar pakaian: ${response.statusText}`);
