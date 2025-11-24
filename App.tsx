@@ -16,7 +16,6 @@ export default function App() {
 
   const handleSelectProvince = (item: ClothingItem) => {
     setSelectedClothing(item);
-    // Kita tidak mengubah 'view', tapi state selectedClothing akan mentrigger Modal muncul
   };
 
   const handleCloseModal = () => {
