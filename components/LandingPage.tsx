@@ -5,7 +5,6 @@ import { Footer } from './Footer';
 
 import { HeroSection } from '@/components/landing/HeroSection';
 import { AboutSection } from '@/components/landing/AboutSection';
-import { HowItWorksSection } from '@/components/landing/HowItWorksSection';
 import { FeaturesSection } from '@/components/landing/FeaturesSection';
 import { TeamSection } from '@/components/landing/TeamSection';
 import { LandingPageStyles } from '@/components/landing/LandingPageStyles';
@@ -21,7 +20,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
 
       <HeroSection onStart={onStart} />
       <AboutSection />
-      <HowItWorksSection />
       <FeaturesSection />
       <TeamSection />
       
