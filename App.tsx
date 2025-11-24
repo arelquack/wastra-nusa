@@ -4,6 +4,7 @@ import { Footer } from './components/Footer';
 import { LandingPage } from './components/LandingPage';
 import { MapExplorerSVG } from './components/MapExplorerSVG';
 import { CulturalExperienceModal } from './components/CulturalExperienceModal';
+import { CulturalTryOnModal } from './components/CulturalTryOnModal';
 import type { ClothingItem } from './types';
 
 export default function App() {
@@ -65,12 +66,19 @@ export default function App() {
             - Muncul saat selectedClothing tidak null
             - Menangani Heritage Mode & Fusion Mode 
         */}
-        {selectedClothing && (
-             <CulturalExperienceModal 
-                item={selectedClothing} 
-                onClose={handleCloseModal} 
-             />
-        )}
+      {selectedClothing && (
+        <>
+          <CulturalExperienceModal 
+            item={selectedClothing} 
+            onClose={handleCloseModal}
+          />
+
+          <CulturalTryOnModal
+            item={selectedClothing} 
+            onClose={handleCloseModal}
+          />
+        </>
+      )}
       </main>
       
       <Footer />
