@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Header } from './components/Header';
-import { Footer } from './components/Footer';
+// import { Footer } from './components/Footer';
 import { LandingPage } from './components/LandingPage';
 import { MapExplorerSVG } from './components/MapExplorerSVG';
 import { CulturalExperienceModal } from './components/CulturalExperienceModal';
@@ -53,12 +53,12 @@ export default function App() {
 
   // --- TAMPILAN 2: MAP EXPERIENCE (UTAMA) ---
   return (
-    <div className="min-h-screen text-stone-800 flex flex-col bg-stone-50 relative">
+    <div className="h-screen w-screen text-stone-800 flex flex-col bg-stone-50 relative">
       <Header onNavigate={handleHeaderNavigate} currentView="map" onOpenUsage={() => setOpenUsage(true)} /> {/* Header disederhanakan */}
       
-      <main className="flex-grow flex flex-col relative w-full overflow-hidden">
+      <main className="flex-grow flex flex-col relative w-full h-full overflow-hidden">
         {/* Peta Interaktif SVG */}
-        <div className="relative z-0 w-full h-full min-h-[85vh] flex flex-col">
+        <div className="relative z-0 w-full h-full flex flex-col">
             <MapExplorerSVG 
               onSelectProvince={handleSelectClothing} 
               selectedItem={selectedClothing} 
@@ -88,7 +88,7 @@ export default function App() {
         <HowToUse />
       </Modal>
       
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }
