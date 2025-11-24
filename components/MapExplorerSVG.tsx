@@ -172,7 +172,7 @@ export const MapExplorerSVG: React.FC<MapExplorerSVGProps> = ({
   }, [svgLoaded, selectedItem, isDragging]);
 
   return (
-    <div className="w-full min-h-[calc(100vh_-_4rem)] flex items-center justify-center bg-stone-50 overflow-hidden relative top-20">
+    <div className="w-full min-h-[calc(100vh_-_4rem)] flex items-center justify-center bg-stone-50 overflow-hidden relative top-20 bg-[#FAF7F4] mb-40">
       
       <style>{`
         svg g, svg path {
