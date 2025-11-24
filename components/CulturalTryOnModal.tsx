@@ -1,5 +1,5 @@
 // components/CulturalExperienceModal.tsx
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type { ClothingItem } from '../types';
 import { generateVirtualTryOn, generateCulturalValidation } from '../services/geminiService';
 import { fileToBase64 } from '../utils/fileUtils';
@@ -13,6 +13,56 @@ interface CulturalExperienceModalProps {
 type Mode = 'HERITAGE' | 'FUSION';
 
 export const CulturalTryOnModal: React.FC<CulturalExperienceModalProps> = ({ item, onClose }) => {
+    const [isCameraOpen, setIsCameraOpen] = useState(false);
+const videoRef = useRef<HTMLVideoElement>(null);
+const streamRef = useRef<MediaStream | null>(null);
+
+const openCamera = async () => {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    setIsCameraOpen(true);
+    streamRef.current = stream;
+    if (videoRef.current) videoRef.current.srcObject = stream;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const closeCamera = () => {
+  if (streamRef.current) {
+    streamRef.current.getTracks().forEach(track => track.stop());
+  }
+  setIsCameraOpen(false);
+};
+
+const capturePhoto = () => {
+  if (!videoRef.current) return;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = videoRef.current.videoWidth;
+  canvas.height = videoRef.current.videoHeight;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+  canvas.toBlob(blob => {
+    if (!blob) return;
+    const file = new File([blob], "camera.jpg", { type: "image/jpeg" });
+
+    setPersonImageFile(file);
+    setPersonImagePreview(URL.createObjectURL(file));
+  });
+
+  closeCamera();
+};
+
+useEffect(() => {
+  if (isCameraOpen && videoRef.current && streamRef.current) {
+    videoRef.current.srcObject = streamRef.current;
+  }
+}, [isCameraOpen]);
   // State UI
   const [activeTab, setActiveTab] = useState<Mode>('HERITAGE');
   
@@ -153,28 +203,80 @@ export const CulturalTryOnModal: React.FC<CulturalExperienceModalProps> = ({ ite
                             </p>
                         </div>
 
-                        {/* Upload Box */}
-                        <div className="relative group cursor-pointer">
-                           <input type="file" accept="image/*" onChange={handleImageChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
-                           <div className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all ${personImagePreview ? 'border-amber-500 bg-amber-50' : 'border-stone-300 hover:border-amber-400 hover:bg-stone-50'}`}>
-                                {personImagePreview ? (
-                                    <div className="relative h-48 mx-auto w-fit">
-                                        <img src={personImagePreview} alt="Preview" className="h-full object-contain rounded-lg shadow-sm" />
-                                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-lg text-white font-medium text-sm">
-                                            Ganti Foto
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="py-4">
-                                        <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4 text-stone-400 group-hover:text-amber-600 transition-colors">
-                                            <IconUpload className="w-8 h-8" />
-                                        </div>
-                                        <p className="font-semibold text-stone-700">Klik untuk unggah foto</p>
-                                        <p className="text-xs text-stone-400 mt-1">Format JPG/PNG. Pastikan wajah terlihat jelas.</p>
-                                    </div>
-                                )}
-                           </div>
-                        </div>
+<div className="border-2 border-dashed rounded-2xl p-6 text-center">
+
+  {/* MODE KAMERA */}
+  {isCameraOpen ? (
+    <div className="space-y-3">
+      <video ref={videoRef} autoPlay playsInline className="w-full h-64 object-cover rounded-xl" />
+
+      <div className="flex gap-3">
+        <button 
+          onClick={capturePhoto}
+          className="flex-1 py-2 bg-green-600 text-white rounded-xl font-bold"
+        >
+          Ambil Foto
+        </button>
+
+        <button 
+          onClick={closeCamera}
+          className="flex-1 py-2 bg-stone-200 text-stone-800 rounded-xl font-semibold"
+        >
+          Tutup
+        </button>
+      </div>
+    </div>
+  
+  // MODE PREVIEW FOTO
+  ) : personImagePreview ? (
+    <div className="relative">
+      <img src={personImagePreview} className="w-full h-64 object-contain rounded-xl" />
+      <button 
+        onClick={() => setPersonImagePreview(null)}
+        className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-stone-900 text-white px-4 py-2 rounded-lg"
+      >
+        Ganti Foto
+      </button>
+    </div>
+
+  // MODE AWAL
+  ) : (
+    <div className="space-y-4 py-4">
+
+      <div className="w-20 h-20 bg-stone-100 rounded-full mx-auto flex items-center justify-center">
+        <IconUpload className="w-10 h-10 text-amber-600" />
+      </div>
+
+      <p className="text-sm text-stone-600">Unggah Foto dari Album atau Kamera</p>
+
+      <div className="flex justify-center gap-3">
+        
+        {/* ALBUM */}
+        <label className="px-4 py-2 bg-amber-700 text-white rounded-xl cursor-pointer font-semibold">
+          Album
+          <input 
+            type="file" 
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+          />
+        </label>
+
+        {/* KAMERA */}
+        <button 
+          onClick={openCamera}
+          className="px-4 py-2 bg-amber-700 text-white rounded-xl font-semibold"
+        >
+          Kamera
+        </button>
+
+      </div>
+    </div>
+  )}
+
+</div>
+
+
 
                         {/* Fusion Prompt Input */}
                         {activeTab === 'FUSION' && (
