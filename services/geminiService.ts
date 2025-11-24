@@ -87,7 +87,7 @@ export const generateVirtualTryOn = async (
       **Fusion Instructions:**
       1.  **Core Material:** You MUST preserve the key fabric patterns (Wastra), textures, and colors from the traditional garment (${clothingItem.name}).
       2.  **Modern Style:** Adapt the cut, silhouette, or layering to match this style description: "${userStyle}".
-      3.  **Integration:** Blend the traditional fabric into the modern item (e.g., a denim jacket with Batik patches, or a modern dress using the Songket fabric).
+      3.  **Integration:** Blend the traditional fabric into the modern item.
       4.  **Person:** Keep the person's face, pose, and background EXACTLY as they are in the first image. Only change the outfit.
       5.  **Output:** Create a photorealistic, high-fashion image.
 
@@ -150,7 +150,7 @@ export const generateCulturalValidation = async (
 
   try {
     // Kita gunakan model Flash 1.5 karena cepat, cerdas, dan multimodalnya bagus (bisa lihat gambar)
-    const model = 'gemini-1.5-flash';
+    const model = 'gemini-2.5-flash';
 
     // Bersihkan header data URI (data:image/jpeg;base64,) jika ada agar bersih
     const cleanBase64 = generatedImageBase64.replace(/^data:image\/(png|jpeg|webp);base64,/, "");
