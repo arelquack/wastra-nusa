@@ -3,12 +3,14 @@ import { Header } from './components/Header';
 import { MapExplorerSVG } from './components/MapExplorerSVG';
 import { Footer } from './components/Footer';
 import { LandingPage } from './components/LandingPage';
-// import { CulturalExperienceModal } from './components/CulturalExperienceModal'; // Modal Baru (Fusion/Heritage)
 import type { ClothingItem } from './types';
+import { HowToUse } from './components/HowToUse';
+import { Modal } from './components/Modal';
 
 export default function App() {
   const [hasStarted, setHasStarted] = useState(false);
   const [selectedClothing, setSelectedClothing] = useState<ClothingItem | null>(null);
+  const [openUsage, setOpenUsage] = useState(false);
 
   const handleStart = () => {
     setHasStarted(true);
@@ -30,7 +32,7 @@ export default function App() {
   // 2. Map View (Selalu render) + Overlay Modal
   return (
     <div className="min-h-screen text-stone-800 flex flex-col bg-stone-50 relative">
-      <Header onNavigate={() => {}} currentView="map" /> {/* Header disederhanakan */}
+      <Header onNavigate={() => {}} currentView="map" onOpenUsage={() => setOpenUsage(true)} /> {/* Header disederhanakan */}
       
       <main className="flex-grow flex relative">
         {/* Peta selalu ada di background */}
@@ -49,6 +51,10 @@ export default function App() {
           </div>
         )}
       </main>
+
+      <Modal open={openUsage} onClose={() => setOpenUsage(false)}>
+        <HowToUse />
+      </Modal>
       
       <Footer />
     </div>
