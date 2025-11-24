@@ -1,10 +1,10 @@
 export interface ClothingItem {
   id: string;
+  provinceId: string[];
   name: string;
   origin: string;
   description: string;
   imageUrl: string;
-  coordinates: { lat: number; lng: number };
   sejarah?: string;
   filosofi?: string;
   konteks?: string;
