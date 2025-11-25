@@ -63,7 +63,7 @@ export const generateVirtualTryOn = async (
       finalPrompt = `You are an expert cultural fashion AI specializing in accurate Virtual Try-On for Indonesian traditional attire.
       
       **TASK:**
-      Dress the user (from the FIRST image) in the traditional garment (from the SECOND image) named "${clothingItem.name}" from ${clothingItem.origin}.
+      Dress the user (from the FIRST image) in the traditional garment named "${clothingItem.name}" from ${clothingItem.origin}.
 
       **CRITICAL REQUIREMENTS (MUST FOLLOW):**
       1.  **IDENTITY PRESERVATION:** The face, facial features, skin tone, and body shape MUST remain EXACTLY the same as the person in the FIRST image. Do NOT replace the person with a generic model. This is a try-on, not a new character generation.
