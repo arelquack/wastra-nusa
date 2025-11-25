@@ -137,11 +137,14 @@ export const MapExplorerSVG: React.FC<MapExplorerSVGProps> = ({
         // Set Class
         // Jika salah satu item di provinsi ini sedang dipilih -> Active
         const isSelected = items.some(i => i.id === selectedItem?.id);
+        // Jika popup aktif dan provinsi ini adalah provinsi yang di-popup -> Active
+        const isPopupActive = activePopup && activePopup.id === provId;
         
-        if (isSelected) {
+        if (isSelected || isPopupActive) {
           element.classList.add('province-active');
+          element.classList.remove('province-inactive', 'province-default');
         } else if (selectedItem !== null) {
-          element.classList.add('province-inactive');
+          // element.classList.add('province-inactive');
         } else {
           element.classList.add('province-default');
         }
@@ -169,7 +172,7 @@ export const MapExplorerSVG: React.FC<MapExplorerSVGProps> = ({
       }
     });
 
-  }, [svgLoaded, selectedItem, isDragging]);
+  }, [svgLoaded, selectedItem, isDragging, activePopup]);
 
   return (
     <div className="w-full min-h-[calc(100vh_-_4rem)] flex items-center justify-center bg-stone-50 overflow-hidden relative top-20 bg-[#FAF7F4] mb-40">

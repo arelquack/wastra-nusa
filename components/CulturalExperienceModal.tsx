@@ -12,18 +12,15 @@ interface CulturalExperienceModalProps {
 
 export const CulturalExperienceModal: React.FC<CulturalExperienceModalProps> = ({ item, onClose }) => {
   return (
-  <div 
-    className="
-      fixed left-3 top-1/2 -translate-y-1/2 
+    <div className="
+      absolute left-3
       w-[380px] md:w-[420px] 
-      max-h-[75vh]
-      z-40 
+      max-h-[85vh] z-40 
       bg-white shadow-xl border-r border-stone-200 
       rounded-3xl 
       overflow-y-auto 
-      animate-slide-in
-    "
-  >
+      animate-slide-in"
+      style={{marginTop: '100px', marginBottom: '20px'}}>
       {/* Backdrop Blur */}
       {/* <div className="absolute inset-0 bg-stone-900/60 backdrop-blur-md" onClick={onClose} /> */}
 
