@@ -72,7 +72,7 @@ export const CulturalExperienceModal: React.FC<CulturalExperienceModalProps> = (
                 {/* Marketplace CTA */}
                 <div className="pt-4 border-t border-stone-200">
                     <a
-                        href={`https://shopee.co.id/search?keyword=baju%20adat%20${encodeURIComponent(item.origin)}`}
+                        href={`https://shopee.co.id/search?keyword=baju%20adat%20${encodeURIComponent(item.name)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex text-sm items-center justify-center gap-2 w-full py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-semibold shadow-lg hover:shadow-orange-500/30 transition-all hover:-translate-y-1"
