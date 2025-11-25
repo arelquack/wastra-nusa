@@ -151,16 +151,16 @@ useEffect(() => {
   return (
   <div 
     className="
-      fixed right-0 top-1/2 -translate-y-1/2 
+      fixed right-0
       w-[380px] md:w-[420px] 
-      max-h-[70vh]
+      max-h-[85vh]
       z-40 
       bg-white shadow-xl border-r border-stone-200 
       rounded-3xl 
       overflow-y-auto 
       animate-slide-in
     "
-  >
+  style={{marginTop: '100px', marginBottom: '20px'}}>
       {/* Backdrop Blur */}
       {/* <div className="absolute inset-0 bg-stone-900/60 backdrop-blur-md" onClick={onClose} /> */}
 
@@ -244,7 +244,7 @@ useEffect(() => {
     <div className="space-y-4 py-4">
 
       <div className="w-20 h-20 bg-stone-100 rounded-full mx-auto flex items-center justify-center">
-        <IconUpload className="w-10 h-10 text-amber-600" />
+        <IconUpload className="w-10 h-10"/>
       </div>
 
       <p className="text-sm text-stone-600">Unggah Foto dari Album atau Kamera</p>
