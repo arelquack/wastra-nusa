@@ -17,19 +17,14 @@ const fileToGenerativePart = (base64Data: string, mimeType: string) => {
 
 /**
  * Fungsi Utama: Menghasilkan Gambar (Heritage / Fusion)
- * * @param personImage - Objek gambar pengguna (base64 & mimetype)
- * @param clothingItem - Data pakaian adat yang dipilih
- * @param mode - 'HERITAGE' untuk pelestarian, 'FUSION' untuk gaya modern
- * @param fusionPrompt - Deskripsi gaya modern (hanya dipakai di mode FUSION)
  */
 export const generateVirtualTryOn = async (
   personImage: { data: string; mimeType: string },
   clothingItem: ClothingItem,
-  mode: 'HERITAGE' | 'FUSION' = 'HERITAGE', // Default ke Heritage
+  mode: 'HERITAGE' | 'FUSION' = 'HERITAGE', 
   fusionPrompt?: string 
 ): Promise<string> => {
   
-  // Cek API Key
   if (!API_KEY) {
     console.error("API_KEY environment variable not set");
     throw new Error("Koneksi ke AI gagal: API Key tidak ditemukan.");
@@ -38,11 +33,9 @@ export const generateVirtualTryOn = async (
   const ai = new GoogleGenAI({ apiKey: API_KEY });
 
   try {
-    // Gunakan model image generation
     const model = 'gemini-2.5-flash-image';
     
     // 1. Fetch gambar pakaian dari URL aset
-    // Kita fetch langsung ke public folder sendiri
     const response = await fetch(clothingItem.imageUrl);
 
     if (!response.ok) {
@@ -58,43 +51,47 @@ export const generateVirtualTryOn = async (
     
     const clothingMimeType = blob.type;
 
-    // 2. Siapkan parts gambar untuk dikirim ke AI
+    // 2. Siapkan parts gambar
+    // Urutan penting: Orang dulu (sebagai referensi subjek), baru Baju (sebagai referensi gaya/objek)
     const personPart = fileToGenerativePart(personImage.data, personImage.mimeType);
     const clothingPart = fileToGenerativePart(clothingImageBase64, clothingMimeType);
 
-    // 3. Tentukan Prompt berdasarkan Mode
+    // 3. Tentukan Prompt & Config dengan instruksi STICT
     let finalPrompt = "";
 
     if (mode === 'HERITAGE') {
-      // --- LOGIKA LAMA (Strict Preservation) ---
-      finalPrompt = `You are a fashion AI expert specializing in virtual try-on of traditional Indonesian clothing. Your task is to realistically place the provided traditional garment onto the person in the photo.
-
-      **Instructions:**
-      1.  Identify the garment in the second image and the person in the first image.
-      2.  Seamlessly overlay the garment onto the person, paying close attention to body shape, posture, and lighting.
-      3.  Maintain the original background of the person's photo.
-      4.  The result should be a high-quality, photorealistic image. Do not alter the person's face or body, only add the clothing.
+      finalPrompt = `You are an expert cultural fashion AI specializing in accurate Virtual Try-On for Indonesian traditional attire.
       
-      The garment is: ${clothingItem.name} from ${clothingItem.origin}.`;
+      **TASK:**
+      Dress the user (from the FIRST image) in the traditional garment (from the SECOND image) named "${clothingItem.name}" from ${clothingItem.origin}.
+
+      **CRITICAL REQUIREMENTS (MUST FOLLOW):**
+      1.  **IDENTITY PRESERVATION:** The face, facial features, skin tone, and body shape MUST remain EXACTLY the same as the person in the FIRST image. Do NOT replace the person with a generic model. This is a try-on, not a new character generation.
+      2.  **CLOTHING AUTHENTICITY (PAKEM):** Generate the FULL traditional attire accurately according to the cultural standards (pakem) of ${clothingItem.origin}. 
+          - Ensure complete accessories (headgear/tanjak/siger, sash/ulos/selendang, jewelry) are present if they are part of this outfit's standard look.
+          - Do not crop or simplify the intricate patterns (Wastra).
+      3.  **REALISTIC FIT:** The clothing must wrap naturally around the user's specific body pose in the first image.
+      4.  **BACKGROUND:** Keep the background consistent with the first image if possible, or use a neutral studio background if blending is difficult.
+      5.  **OUTPUT:** A high-quality, photorealistic Portrait Image (Aspect Ratio 3:4).`;
 
     } else {
-      // --- LOGIKA BARU (Fusion / Modern Mix) ---
+      // FUSION MODE
       const userStyle = fusionPrompt || "modern casual style";
       
       finalPrompt = `You are a visionary fashion designer specializing in 'Cultural Fusion' style. 
-      Your task is to REDESIGN the outfit of the person in the first image by combining elements from the traditional cloth (second image) with a specific modern style.
+      
+      **TASK:**
+      Redesign the outfit of the user (from the FIRST image) by blending the traditional Wastra patterns (from the SECOND image) with a modern style: "${userStyle}".
 
-      **Fusion Instructions:**
-      1.  **Core Material:** You MUST preserve the key fabric patterns (Wastra), textures, and colors from the traditional garment (${clothingItem.name}).
-      2.  **Modern Style:** Adapt the cut, silhouette, or layering to match this style description: "${userStyle}".
-      3.  **Integration:** Blend the traditional fabric into the modern item.
-      4.  **Person:** Keep the person's face, pose, and background EXACTLY as they are in the first image. Only change the outfit.
-      5.  **Output:** Create a photorealistic, high-fashion image.
-
-      Target Style: ${userStyle} mixed with ${clothingItem.name} from ${clothingItem.origin}.`;
+      **CRITICAL REQUIREMENTS:**
+      1.  **IDENTITY PRESERVATION:** The face and identity of the person in the FIRST image must remain UNCHANGED. This is the most important rule.
+      2.  **FUSION DESIGN:** Intelligently integrate the key patterns/textures of "${clothingItem.name}" into the modern silhouette described.
+          - Example: Use the Batik pattern on a denim jacket, or Songket texture on a modern skirt.
+      3.  **REALISM:** The result must look like a real photo of the user wearing this new custom outfit.
+      4.  **OUTPUT:** A high-quality, photorealistic Portrait Image (Aspect Ratio 3:4).`;
     }
     
-    // 4. Panggil AI untuk Generate Gambar
+    // 4. Panggil AI
     const result = await ai.models.generateContent({
       model: model,
       contents: {
@@ -105,11 +102,13 @@ export const generateVirtualTryOn = async (
         ],
       },
       config: {
-          responseModalities: [Modality.IMAGE], // Wajib array untuk output gambar
+          responseModalities: [Modality.IMAGE],
+          // @ts-ignore
+          aspectRatio: "3:4", 
       },
     });
     
-    // 5. Ambil hasil gambar base64 dari response
+    // 5. Ambil hasil
     for (const part of result.candidates?.[0]?.content?.parts || []) {
         if (part.inlineData) {
             const base64ImageBytes: string = part.inlineData.data;
@@ -129,12 +128,7 @@ export const generateVirtualTryOn = async (
 };
 
 /**
- * Fungsi Baru: Cultural Validation dengan "Vision"
- * * Fungsi ini menganalisis gambar hasil generate (Fusion) untuk memberikan penjelasan 
- * filosofis yang akurat sesuai apa yang terlihat.
- * * @param clothingItem - Data baju adat asli
- * @param fusionStyle - Deskripsi gaya modern yang diminta user
- * @param generatedImageBase64 - Gambar hasil output AI (Fusion) untuk dianalisis
+ * Fungsi Validasi Budaya (Vision-based)
  */
 export const generateCulturalValidation = async (
   clothingItem: ClothingItem,
@@ -149,51 +143,35 @@ export const generateCulturalValidation = async (
   const ai = new GoogleGenAI({ apiKey: API_KEY });
 
   try {
-    // Kita gunakan model Flash 1.5 karena cepat, cerdas, dan multimodalnya bagus (bisa lihat gambar)
     const model = 'gemini-2.5-flash';
-
-    // Bersihkan header data URI (data:image/jpeg;base64,) jika ada agar bersih
     const cleanBase64 = generatedImageBase64.replace(/^data:image\/(png|jpeg|webp);base64,/, "");
-    
-    // Siapkan gambar untuk dilihat AI
-    // Kita asumsikan output gambar VTO adalah JPEG/PNG
     const imagePart = fileToGenerativePart(cleanBase64, "image/jpeg");
 
     const prompt = `
       Peran Anda adalah kurator budaya "WastraNusa".
       
       Tugas:
-      Analisis GAMBAR yang saya lampirkan ini. Ini adalah hasil desain fashion "Fusion" (perpaduan modern).
-      Gambar ini menggabungkan Baju Adat "${clothingItem.name}" dari ${clothingItem.origin} dengan gaya modern "${fusionStyle}".
+      Analisis GAMBAR yang saya lampirkan ini. Ini adalah hasil desain fashion "Fusion".
+      Baju Adat Asli: "${clothingItem.name}" (${clothingItem.origin}).
+      Gaya Modern User: "${fusionStyle}".
 
-      Berikan "Validasi Budaya" singkat (maksimal 3 kalimat) dalam Bahasa Indonesia yang inspiratif.
-      
-      PANDUAN PENTING:
-      1. LIHAT GAMBARNYA DULU. Deskripsikan secara spesifik bagaimana motif/kain tradisional diterapkan di gambar tersebut (misal: "pada kerah", "sebagai outer", "pada lengan").
-      2. Hubungkan elemen visual tersebut dengan filosofi asli: "${clothingItem.filosofi || 'lambang kehormatan dan identitas'}".
-      3. Jangan berhalusinasi. Jika motifnya hanya sedikit, katakan itu sebagai aksen. Jika dominan, katakan dominan.
-
-      Contoh Output yang diharapkan:
-      "Sentuhan motif Songket yang ditempatkan pada saku jaket denim ini memberikan aksen modern yang cerdas. Meskipun tampil kasual, pola pucuk rebung tersebut tetap menyimbolkan harapan baik, membuktikan bahwa tradisi bisa relevan di gaya jalanan masa kini."
+      Berikan "Validasi Budaya" singkat (maksimal 5 kalimat) dalam Bahasa Indonesia.
+      Jelaskan bagaimana motif tradisional diterapkan (misal: "pada kerah", "sebagai outer") dan hubungkan dengan filosofi asli: "${clothingItem.filosofi || 'identitas budaya'}".
     `;
 
     const result = await ai.models.generateContent({
       model: model,
       contents: [{ 
         role: 'user', 
-        parts: [
-            imagePart,
-            { text: prompt }
-        ] 
+        parts: [imagePart, { text: prompt }] 
       }],
     });
 
     const responseText = result.text;
-    return responseText || "Validasi budaya berhasil, namun detail tidak tersedia.";
+    return responseText || "Validasi budaya berhasil.";
 
   } catch (error) {
     console.error("Error generating validation:", error);
-    // Fallback jika validasi gagal, tapi gambar utama sudah sukses
     return "Paduan budaya yang menarik! Tetap lestarikan warisan leluhur dalam gaya modernmu.";
   }
 };
