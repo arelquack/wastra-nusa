@@ -54,7 +54,7 @@ export const HowToUse = () => {
                 number="1"
                 image={
                     <div className="h-20 flex items-center justify-center w-full mb-1">
-                        <img src="/public/assets/peta-indonesia.svg" className="max-h-full max-w-full object-contain" />
+                        <img src="/assets/peta-indonesia.svg" className="max-h-full max-w-full object-contain" />
                     </div>
                 }
                 title="Pilih Provinsi Melalui Peta Interaktif"
@@ -66,7 +66,7 @@ export const HowToUse = () => {
                 number="2"
                 image={
                     <div className="h-20 flex items-center justify-center w-full mb-1">
-                        <img src="/public/assets/baju.png" className="max-h-full max-w-full object-contain" />
+                        <img src="/assets/baju.png" className="max-h-full max-w-full object-contain" />
                     </div>
                 }
                 title="Pilih Pakaian Adat"
@@ -78,7 +78,7 @@ export const HowToUse = () => {
                 number="3"
                 image={
                     <div className="h-20 flex items-center justify-center w-full mb-1">
-                        <img src="/public/assets/unggah.png" className="max-h-full max-w-full object-contain" />
+                        <img src="/assets/unggah.png" className="max-h-full max-w-full object-contain" />
                     </div>
                 }
                 title="Unggah Foto Anda"
@@ -91,7 +91,7 @@ export const HowToUse = () => {
                 number="4"
                 image={
                     <div className="h-20 flex items-center justify-center w-full mb-1">
-                        <img src="/public/assets/ai.png" className="max-h-full max-w-full object-contain" />
+                        <img src="/assets/ai.png" className="max-h-full max-w-full object-contain" />
                     </div>
                 }
                 title="Tuliskan Prompt Anda"
@@ -104,7 +104,7 @@ export const HowToUse = () => {
                 number={mode === "heritage" ? "4" : "5"}
                 image={
                     <div className="h-20 flex items-center justify-center w-full mb-1">
-                        <img src="/public/assets/unduh.png" className="max-h-full max-w-full object-contain" />
+                        <img src="/assets/unduh.png" className="max-h-full max-w-full object-contain" />
                     </div>
                 }
                 title="Nikmati Hasil AI"

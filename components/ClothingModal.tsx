@@ -43,7 +43,7 @@ export const ClothingModal: React.FC<ClothingModalProps> = ({ item, onClose }) =
             {/* CTA SHOPEE */}
             <div className="mt-8 flex">
               <a
-                href={`https://shopee.co.id/search?keyword=baju%20adat%20${encodeURIComponent(item.origin)}`}
+                href={`https://shopee.co.id/search?keyword=baju%20adat%20${encodeURIComponent(item.name)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full inline-flex items-center justify-center gap-2 rounded-xl py-3 px-4
